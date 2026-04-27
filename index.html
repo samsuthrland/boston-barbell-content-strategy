@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Boston Barbell — Content Strategy (Phase 1)</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --border-hi: #3a3a3a;
+      --text: #f0f0f0;
+      --text-muted: #8a8a8a;
+      --text-dim: #5c5c5c;
+      --accent: #c81c24;
+      --accent-dim: rgba(200, 28, 36, 0.12);
+      --max: 68rem;
+      --navw: 15rem;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .skip {
+      position: absolute;
+      left: -9999px;
+      z-index: 9999;
+    }
+    .skip:focus {
+      left: 1rem;
+      top: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* --- Navigation --- */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      width: var(--navw);
+      min-width: var(--navw);
+      max-height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      background: var(--bg);
+      z-index: 10;
+    }
+    .nav-inner {
+      padding: 1.5rem 1.25rem 2rem;
+    }
+    .nav-title {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin: 0 0 1rem;
+    }
+    .toc {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .toc a {
+      display: block;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      padding: 0.35rem 0;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      padding-left: 0.6rem;
+      margin-left: -0.6rem;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .toc a:hover {
+      color: var(--text);
+    }
+    .toc a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .toc a[aria-current="true"] {
+      color: var(--text);
+      border-left-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .nav-mobile {
+      display: none;
+    }
+    .nav-mobile summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      list-style: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-mobile summary::-webkit-details-marker { display: none; }
+    .nav-mobile[open] summary { border-bottom-color: var(--border); }
+
+    @media (max-width: 900px) {
+      .nav-wrap { display: none; }
+      .nav-mobile {
+        display: block;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-mobile .toc { padding: 0.5rem 1rem 1rem; }
+    }
+
+    /* --- Main --- */
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+    .section {
+      padding: 3.5rem 1.5rem 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .kicker {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 0.5rem;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.85rem, 4vw, 2.35rem);
+      font-weight: 500;
+      line-height: 1.2;
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+      font-weight: 600;
+      margin: 0 0 1rem;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin: 1.5rem 0 0.6rem;
+    }
+    p {
+      margin: 0 0 1rem;
+      color: var(--text-muted);
+    }
+    p.lead {
+      font-size: 1.05rem;
+      color: var(--text);
+      max-width: 40em;
+    }
+    ul.list {
+      margin: 0 0 1rem;
+      padding-left: 1.1rem;
+      color: var(--text-muted);
+    }
+    ul.list li { margin-bottom: 0.4rem; }
+    ul.tight { margin: 0; }
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin: 0 0 1.5rem;
+      max-width: 42em;
+    }
+
+    .title-block {
+      padding: 2rem 0 0;
+    }
+    @media (min-width: 901px) {
+      .section#overview {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        padding-top: 2rem;
+      }
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+    }
+    .callout strong { color: var(--text); }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0 0;
+    }
+    @media (max-width: 800px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+    .card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.25rem 1.35rem;
+    }
+    .card h2, .card h3 { margin-top: 0; }
+    .card-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin: 0 0 0.4rem;
+    }
+    .card h3 {
+      font-size: 1.1rem;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .funnel {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 1.5rem 0 0;
+      max-width: 32rem;
+    }
+    .funnel-step {
+      position: relative;
+      padding: 1rem 1.1rem 1.1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      text-align: center;
+    }
+    .funnel-step + .funnel-step {
+      border-top: none;
+    }
+    .funnel-step::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -0.5rem;
+      transform: translateX(-50%) rotate(45deg);
+      width: 0.5rem;
+      height: 0.5rem;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      z-index: 1;
+    }
+    .funnel-step:last-child::after { display: none; }
+    .funnel-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+    .funnel-step p { margin: 0.35rem 0 0; color: var(--text); font-size: 0.95rem; }
+    .funnel-note { margin-top: 1.25rem; }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1rem 0 0;
+      border: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--surface2);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    tr:last-child td { border-bottom: none; }
+    .num { font-variant-numeric: tabular-nums; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin: 1rem 0 0;
+    }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .role-col {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.15rem 1.25rem;
+    }
+    .role-col h3 {
+      margin-top: 0;
+      color: var(--text);
+    }
+
+    .platform-block h3 { margin-top: 1.25rem; }
+    .platform-block h3:first-of-type { margin-top: 0; }
+    .platform-meta {
+      display: grid;
+      grid-template-columns: 12rem 1fr;
+      gap: 0.35rem 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0.5rem 0 0;
+    }
+    @media (max-width: 600px) {
+      .platform-meta { grid-template-columns: 1fr; }
+    }
+    .platform-meta dt {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .platform-meta dd { margin: 0 0 0.5rem; }
+
+    .back-top {
+      display: inline-block;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .back-top:hover { color: var(--text); }
+    .hint {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 1.5rem;
+    }
+    .kbd {
+      font-size: 0.7em;
+      border: 1px solid var(--border);
+      padding: 0.1em 0.35em;
+      border-radius: 2px;
+    }
+
+    @media print {
+      .nav-wrap, .nav-mobile, .hint, .back-top, .skip { display: none !important; }
+      .layout { display: block; }
+      .section { break-inside: avoid; page-break-inside: avoid; border-bottom: 1px solid #ccc; }
+      body { background: #fff; color: #111; }
+      :root {
+        --bg: #fff;
+        --text: #111;
+        --text-muted: #333;
+        --border: #ccc;
+        --surface: #f7f7f7;
+        --surface2: #eee;
+        --accent: #a01820;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="layout">
+    <nav class="nav-wrap" aria-label="Table of contents">
+      <div class="nav-inner">
+        <p class="nav-title">Contents</p>
+        <ol class="toc" id="toc-desktop">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#objective">Strategic objective</a></li>
+          <li><a href="#ecosystem">Platform ecosystem</a></li>
+          <li><a href="#funnel">Funnel structure</a></li>
+          <li><a href="#weekly-output">Weekly output</a></li>
+          <li><a href="#allocation">Content allocation</a></li>
+          <li><a href="#production">Production system</a></li>
+          <li><a href="#roles">Roles &amp; responsibilities</a></li>
+          <li><a href="#time">Time allocation (Sam)</a></li>
+          <li><a href="#workflow">Weekly workflow</a></li>
+          <li><a href="#instagram">Instagram</a></li>
+          <li><a href="#tiktok">TikTok</a></li>
+          <li><a href="#facebook">Facebook</a></li>
+          <li><a href="#performance">Performance framework</a></li>
+          <li><a href="#brand">Brand &amp; principles</a></li>
+          <li><a href="#outcome">Expected outcome</a></li>
+        </ol>
+      </div>
+    </nav>
+
+    <main class="main" id="main">
+      <details class="nav-mobile">
+        <summary>Table of contents</summary>
+        <ol class="toc" id="toc-mobile"></ol>
+      </details>
+
+      <section class="section" id="overview" aria-labelledby="overview-h">
+        <div class="section-inner">
+          <div class="title-block">
+            <p class="kicker">Internal — Phase 1</p>
+            <h1 id="overview-h">Boston Barbell content strategy</h1>
+            <p class="lead">Phase 1: 90-day plan — audience growth &amp; authority</p>
+            <p class="subtitle">The primary objective over the next 90 days is to maximize audience growth and establish Boston Barbell as a clear authority across Instagram, TikTok, and Facebook. This phase is focused on building a consistent content system, strengthening brand identity, and creating a scalable execution model across all three platforms.</p>
+            <p class="hint">Use <span class="kbd">J</span> and <span class="kbd">K</span> to move between sections.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="objective" aria-labelledby="objective-h">
+        <div class="section-inner">
+          <p class="kicker">01</p>
+          <h2 id="objective-h">Strategic objective</h2>
+          <ul class="list">
+            <li><strong>Audience growth</strong> — expand reach and following across the ecosystem.</li>
+            <li><strong>Authority-building</strong> — position Boston Barbell as a serious training authority in the niche.</li>
+            <li><strong>Consistent execution system</strong> — a repeatable, scalable model across all platforms.</li>
+            <li><strong>Primary conversion metric (this phase):</strong> <strong>Instagram follows</strong>. A secondary, future-facing conversion will be traffic to the Apply-to-Train funnel, which will become a core focus in the next phase after the website and app launch.</li>
+            <li><strong>Longer term (3–6 months):</strong> TikTok evolves into the primary discovery engine; Instagram functions as the authority and conversion hub; the funnel shifts toward driving users into the Apply-to-Train system and app.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="ecosystem" aria-labelledby="ecosystem-h">
+        <div class="section-inner">
+          <p class="kicker">02</p>
+          <h2 id="ecosystem-h">Platform ecosystem</h2>
+          <div class="cards">
+            <div class="card">
+              <p class="card-title">TikTok</p>
+              <h3>Growth &amp; discovery</h3>
+              <p>Primary <strong>growth engine</strong> and testing platform: reach, engagement, and rapid iteration. Top-of-funnel entry point, with coach-led rant content. Occasional but not aggressive CTAs to Instagram.</p>
+            </div>
+            <div class="card">
+              <p class="card-title">Instagram</p>
+              <h3>Authority &amp; conversion</h3>
+              <p>Highest <strong>quality control</strong>: polished, structured, educational content to position the brand as a precise, results-driven coaching authority. <strong>All Instagram posts require final approval from Chris.</strong></p>
+            </div>
+            <div class="card">
+              <p class="card-title">Facebook</p>
+              <h3>Trust &amp; local positioning</h3>
+              <p>Secondary <strong>authority layer</strong> focused on trust-building and local positioning. Not a primary growth channel; important for long-term lead generation and community presence.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="funnel" aria-labelledby="funnel-h">
+        <div class="section-inner">
+          <p class="kicker">03</p>
+          <h2 id="funnel-h">Funnel structure (Phase 1)</h2>
+          <div class="funnel" role="img" aria-label="Phase 1 funnel: TikTok to Instagram to Facebook">
+            <div class="funnel-step">
+              <span class="funnel-label">Top</span>
+              <p><strong>TikTok</strong> drives discovery and initial attention.</p>
+            </div>
+            <div class="funnel-step">
+              <span class="funnel-label">Mid</span>
+              <p><strong>Instagram</strong> converts attention into followers and builds trust.</p>
+            </div>
+            <div class="funnel-step">
+              <span class="funnel-label">Reinforce</span>
+              <p><strong>Facebook</strong> reinforces brand presence and supports long-term local positioning.</p>
+            </div>
+          </div>
+          <p class="funnel-note" style="color:var(--text-muted);max-width:40em">During this phase, the <strong>primary conversion is an Instagram follow</strong>. The app and Apply-to-Train funnel are not actively promoted yet. CTAs remain moderate, with occasional explicit direction toward Instagram, but no aggressive funneling.</p>
+        </div>
+      </section>
+
+      <section class="section" id="weekly-output" aria-labelledby="weekly-h">
+        <div class="section-inner">
+          <p class="kicker">04</p>
+          <h2 id="weekly-h">Weekly output system</h2>
+          <p>Non-negotiable <strong>weekly minimums</strong>:</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Minimum (posts / week)</th>
+                  <th>Target range (optimal weeks)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Instagram</td>
+                  <td class="num">3</td>
+                  <td class="num">4–5</td>
+                </tr>
+                <tr>
+                  <td>TikTok</td>
+                  <td class="num">5</td>
+                  <td class="num">5–8</td>
+                </tr>
+                <tr>
+                  <td>Facebook</td>
+                  <td class="num">4</td>
+                  <td class="num">5–6</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <strong>Definition of a successful week:</strong> all baseline posting requirements are met. Failure to meet the baselines constitutes a <strong>failed week</strong>, regardless of performance metrics. A flex layer allows additional content based on available time, performance insights, and opportunities.
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="allocation" aria-labelledby="alloc-h">
+        <div class="section-inner">
+          <p class="kicker">05</p>
+          <h2 id="alloc-h">Content allocation (master)</h2>
+          <p>Cross-platform share of output, as defined in the master strategy:</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Mix</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Instagram</strong></td>
+                  <td>~60–70% movement and exercise content (foundation). ~20–30% structured, opinion-driven content (e.g. hot takes, training concepts, controlled “rant-style” delivery). Optional carousels or deeper breakdowns: a small share of output.</td>
+                </tr>
+                <tr>
+                  <td><strong>TikTok</strong></td>
+                  <td>~50–60% coach-led rant content (primary growth driver). ~30–40% movement content, typically repurposed from Instagram (reinforces authority). ~0–20% optional content (e.g. variations, myth-style, experimental formats).</td>
+                </tr>
+                <tr>
+                  <td><strong>Facebook</strong></td>
+                  <td>~60–70% repurposed video from Instagram and TikTok. ~20–30% written posts (coaching insights, more approachable detail). A small percentage may include photos or additional brand-building content.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="production" aria-labelledby="prod-h">
+        <div class="section-inner">
+          <p class="kicker">06</p>
+          <h2 id="prod-h">Content production system</h2>
+          <p>Hybrid model:</p>
+          <ul class="list">
+            <li><strong>Batch filming</strong> — for movement content and any shoots with models or structured demonstrations. Planned in advance and <strong>executed by Sam</strong>.</li>
+            <li><strong>Reactive filming</strong> — for rant content, <strong>recorded by Chris</strong> on iPhone, for spontaneity and authenticity while maintaining consistent output.</li>
+          </ul>
+          <p><strong>Weekly filming time</strong> is expected to fall within <strong>4–6 hours</strong>.</p>
+        </div>
+      </section>
+
+      <section class="section" id="roles" aria-labelledby="roles-h">
+        <div class="section-inner">
+          <p class="kicker">07</p>
+          <h2 id="roles-h">Roles &amp; responsibilities</h2>
+          <div class="grid-2">
+            <div class="role-col">
+              <h3>Chris</h3>
+              <ul class="list">
+                <li>Face of the brand and primary source of coaching expertise.</li>
+                <li>Scripts all educational and authority-based content.</li>
+                <li>Records rant content.</li>
+                <li>Approves all Instagram posts.</li>
+                <li>Manages engagement on Instagram.</li>
+              </ul>
+            </div>
+            <div class="role-col">
+              <h3>Sam</h3>
+              <ul class="list">
+                <li>Content operator and execution lead.</li>
+                <li>All editing, posting, and scheduling across platforms.</li>
+                <li>Films movement content.</li>
+                <li>Full control over TikTok and Facebook, and manages engagement on those platforms.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="time" aria-labelledby="time-h">
+        <div class="section-inner">
+          <p class="kicker">08</p>
+          <h2 id="time-h">Time allocation (Sam)</h2>
+          <p>Total weekly <strong>marketing</strong> time: approximately <strong>30–36 hours</strong>, in addition to <strong>15–20 hours</strong> of in-person coaching.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Hours / week (approx.)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Filming</td><td class="num">4–6</td></tr>
+                <tr><td>Editing, posting, general content management (distributed: ~60–70% Instagram, ~20–25% TikTok, ~10–15% Facebook)</td><td class="num">18–22</td></tr>
+                <tr><td>Engagement (TikTok &amp; Facebook focus)</td><td class="num">2–4</td></tr>
+                <tr><td>Flex block — projects, system improvements, website, automation, strategic initiatives</td><td class="num">4–6</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="workflow" aria-labelledby="workflow-h">
+        <div class="section-inner">
+          <p class="kicker">09</p>
+          <h2 id="workflow-h">Weekly execution workflow</h2>
+          <p>At the start of each week: plan movement videos to film, rant topics to record, and key ideas to test. During production: <strong>batch</strong> movement; capture rant content <strong>throughout the week</strong>. Editing and posting: <strong>Instagram first</strong>, then repurpose to TikTok and Facebook. End of week: review performance to find top content and inform future direction.</p>
+        </div>
+      </section>
+
+      <section class="section" id="instagram" aria-labelledby="ig-h">
+        <div class="section-inner platform-block">
+          <p class="kicker">10</p>
+          <h2 id="ig-h">Instagram content strategy</h2>
+
+          <h3>Role (platform-specific)</h3>
+          <p>Establish Boston Barbell as a top-tier authority in serious training, with strong emphasis on <strong>glute development</strong>. Build trust, credibility, and brand buy-in; position for future coaching and app conversion. Polished, front-facing brand — <strong>not a platform for experimentation</strong>.</p>
+
+          <h3>Weekly output</h3>
+          <p>Aligns with master baselines. Instagram strategy doc: <strong>3–5</strong> posts per week, <strong>target: 4</strong>. Success metric: <strong>1–2</strong> “hits” per week (strong Reel performance pushed to feed).</p>
+          <p>Ideal mix from Instagram doc: <strong>2–3</strong> movement videos, <strong>1</strong> myth-busting / hot take, <strong>0–1</strong> structured talking or carousel. Prioritize quality and strict niche consistency.</p>
+
+          <h3>Content mix (depth)</h3>
+          <p>Primary (≈80–90% in Instagram doc): <strong>movement education</strong> — effort hook, introduce movement, explain what / who / what it does, demonstration, wrap-up. This is the highest-ROI content; the foundation is not diluted.</p>
+          <p>Secondary (≈10–20%): <strong>hot take / myth-busting</strong> to drive engagement and discussion. <strong>Structured talking</strong> (controlled, “rant energy with coached delivery”) — more polished and intentional than raw TikTok ranting. <strong>Carousels (optional):</strong> high-value breakdowns, mistake lists, programming insights; supports system-level thinking and future offers.</p>
+
+          <h3>Production &amp; distribution (Reels system)</h3>
+          <p>Post to <strong>trial Reels</strong> first. Track views, likes, saves, comments, follower conversion. When engagement plateaus, decide: <strong>Option A</strong> — move to feed when performance is solid (“bird in hand”). <strong>Option B</strong> — re-upload a clear outlier natively to feed. Let winners run; <strong>not every post</strong> goes to feed.</p>
+          <p>Time (Instagram doc): production (movement) <strong>8–14 h</strong>; posting and monitoring <strong>~1 h</strong>; total <strong>~12–15 h</strong> / week in that document (subset of Sam’s total marketing time).</p>
+
+          <h3>Platform guidelines</h3>
+          <ul class="list">
+            <li>Tone: clean, structured, educational; direct but more refined than TikTok.</li>
+            <li>Do not break what’s working; quality over daily volume. Feed is premium placement.</li>
+            <li>Reels are the testing ground; authority over virality — every piece should educate, convince, and position expertise.</li>
+          </ul>
+          <p>Evolution path: Level 1 (current) exercises and movement → Level 2 execution mistakes and errors → Level 3 programming, systems, philosophy.</p>
+
+          <h3>Expected outcome</h3>
+          <p>Consistent Reel growth, weekly high-performing content driving account growth, strong authority in niche, increased trust and long-term brand buy-in (per Instagram strategy document).</p>
+        </div>
+      </section>
+
+      <section class="section" id="tiktok" aria-labelledby="tt-h">
+        <div class="section-inner platform-block">
+          <p class="kicker">11</p>
+          <h2 id="tt-h">TikTok content strategy</h2>
+
+          <h3>Role (platform-specific)</h3>
+          <p>Maximize reach, follower growth, and engagement; build a loyal, high-intent audience. <strong>Top-of-funnel discovery</strong> — not just views. TikTok: discovery; Instagram: authority, trust, conversion; future app: monetization. Goal: a philosophy-aligned audience, not generic scale.</p>
+
+          <h3>Weekly output</h3>
+          <p>Master: minimum 5, target 5–8. TikTok doc: target <strong>5–7</strong> posts; baseline <strong>5–6</strong> with occasional <strong>6–7+</strong> every 3–4 weeks. Breakdown: <strong>2–4</strong> movement (avg 3) repurposed, <strong>2–5</strong> rants (avg 3) TikTok-native, <strong>0–2</strong> optional (myth-busting, etc.). Rants at ~<strong>50–60%</strong> of output.</p>
+
+          <h3>Content mix &amp; pillars</h3>
+          <p><strong>Movement education:</strong> repurposed from Instagram where possible; 2–4 / week. <strong>Coach rants (Chris):</strong> 2–5 / week; primary growth lever. <strong>Myth-busting:</strong> 0–2 / week, lightly edited. <strong>Standards / “what serious training looks like”:</strong> 0–2 / week. <strong>Culture and identity</strong> built through all content, not a standalone focus.</p>
+
+          <h3>Production system</h3>
+          <p>Movement: default <strong>repost from Instagram</strong> (no edits) when possible; 5–10 min when minimal adjustments. Optimize only for top 20% performance. Rants: spontaneous + batch; Chris records as ideas come. Edit: cut dead space, tight pacing, 2–4 key overlays, hook at start; do not over-edit. Hooks in first 1–2 seconds are top priority. Captions: 1–2 lines max. Hashtags: 3–5, niche + broad — content quality drives performance, not hashtag over-optimization.</p>
+          <p>Weekly time (TikTok doc): launch <strong>5–7 h</strong> (weeks 1–2); long-term <strong>3–4 h</strong> (movement reposts ~30 min; rant edit ~1.5–2 h; posting/engagement ~1 h).</p>
+
+          <h3>Platform guidelines</h3>
+          <p>Target audience: intermediate+ lifters, 2+ years training, care about efficiency and results. Brand: hard, intense, no-BS, performance-driven — <strong>authority, not influencers</strong>; coaches, not entertainers. Rules: do not overproduce; let winners dictate strategy; lean into polarization; <strong>authority over entertainment</strong> (coaching brand, not trend account); consistency over perfection. Cross-platform: occasional IG mentions; story promotion to TikTok; no aggressive CTA.</p>
+          <p>Comment strategy: reply early, use comments for ideas, lean into debate. Weekly: identify top 2–3, analyze hook/format/topic, recreate similar content.</p>
+
+          <h3>Expected outcome</h3>
+          <p>Strong follower growth, multiple high-performing or viral posts, clear content identity, increased crossover to Instagram, early development of a loyal audience (0–3 months, per TikTok document).</p>
+        </div>
+      </section>
+
+      <section class="section" id="facebook" aria-labelledby="fb-h">
+        <div class="section-inner platform-block">
+          <p class="kicker">12</p>
+          <h2 id="facebook-h">Facebook content strategy</h2>
+
+          <h3>Role (platform-specific)</h3>
+          <p>Build <strong>local</strong> presence and authority; generate awareness that becomes in-person leads over time. Short term: awareness and familiarity. Long term: traffic to Apply to Train and consultations. Facebook: <strong>local authority</strong>, <strong>lead gen layer</strong>, <strong>community-facing</strong> — broader than IG/TikTok (e.g. ages 30–65+, varied experience), still authoritative.</p>
+          <p>Primary actions: <strong>current</strong> — book a free consult via website. <strong>Future</strong> — direct traffic to “Apply to Train” as the primary system entry point.</p>
+
+          <h3>Weekly output</h3>
+          <p>Master: minimum 4, target 5–6. Facebook doc: <strong>4–7</strong> total / week. Breakdown: <strong>3–5</strong> video (repurposed), <strong>1–2</strong> written, <strong>0–1</strong> optional photo or additional post. <strong>Video drives reach; written content builds trust and local engagement</strong> (per Facebook document).</p>
+
+          <h3>Content mix</h3>
+          <p>Video: mainly Instagram Reels, some high-performing TikTok. Post top IG content, trial Reels, overflow (Sam’s judgment) — <strong>video primary</strong>. Written: coaching insights, mistakes, simple frameworks, misconceptions in a more approachable tone. Native video uploads: short- and slightly longer-form. Photo: environment, client highlights, atmosphere — sparing. Do not create high-production content specifically for Facebook.</p>
+
+          <h3>Production &amp; local layer</h3>
+          <p>Repurposed, minimal additional editing, clarity and value. Written: slightly longer than Instagram; structured; less aggressive than TikTok, still direct. <strong>Engagement:</strong> Sam handles all Facebook engagement — comments, other pages, local groups, audience feedback. Local strategy: position as serious facility and trusted local resource; medium engagement level; build network with local businesses and fitness pages; <strong>light</strong> local group posting (valuable, non-spam). Time: <strong>2–4 h</strong> (initial) → <strong>1–2 h</strong> (long-term target) per week in Facebook document.</p>
+
+          <h3>Platform guidelines</h3>
+          <p>Tone: balanced, direct but slightly softer than TikTok/IG, approachable, still professional. Perception: knowledgeable, professional, the go-to training facility in the area. Rules: keep production low effort; <strong>focus on written and engagement</strong>; leverage existing content; local positioning in everything; stay consistent and flexible.</p>
+
+          <h3>Expected outcome</h3>
+          <p>Increased local awareness, stronger community recognition, gradual inbound increases, more consult bookings over time, foundation for future Apply to Train (per Facebook document).</p>
+        </div>
+      </section>
+
+      <section class="section" id="performance" aria-labelledby="perf-h">
+        <div class="section-inner">
+          <p class="kicker">13</p>
+          <h2 id="perf-h">Performance framework</h2>
+          <p>Success is defined by <strong>execution</strong>, not vanity metrics. A <strong>successful week</strong> = all baseline posting requirements are met. A <strong>failed week</strong> = baselines not met.</p>
+          <p>Metrics such as views, saves, shares, comments, and follower growth are monitored in-platform and used as <strong>feedback</strong> to guide content — not as primary success criteria. A more <strong>advanced KPI tracking system</strong> will be implemented later.</p>
+        </div>
+      </section>
+
+      <section class="section" id="brand" aria-labelledby="brand-h">
+        <div class="section-inner">
+          <p class="kicker">14</p>
+          <h2 id="brand-h">Brand standards &amp; strategic principles</h2>
+          <h3>Brand standards</h3>
+          <p>All content must reinforce Boston Barbell as a <strong>high-level authority</strong>. The brand does not produce low-quality or meme-based content, does not rely on low-effort engagement tactics, and does not publish anything <strong>inaccurate, incomplete, or unprofessional</strong>. All content must be intentional, precise, and aligned with a <strong>serious training authority</strong> identity.</p>
+          <h3>Strategic principles (master)</h3>
+          <ul class="list">
+            <li><strong>Authority over virality</strong> — and <strong>consistency over perfection</strong>.</li>
+            <li><strong>Output</strong> is the primary driver of growth.</li>
+            <li>Instagram: precision and brand presentation. TikTok: volume, testing, rapid growth. Facebook: trust-building and long-term positioning.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="outcome" aria-labelledby="out-h">
+        <div class="section-inner">
+          <p class="kicker">15</p>
+          <h2 id="out-h">Expected outcome (90 days)</h2>
+          <p>If executed consistently, the strategy should yield:</p>
+          <ul class="list">
+            <li>Measurable <strong>audience growth</strong> across all platforms.</li>
+            <li>Clearly defined, consistent <strong>brand identity</strong>.</li>
+            <li>A <strong>repeatable, scalable content system</strong> and <strong>increased authority</strong> in the target niche.</li>
+            <li>Clear <strong>platform roles</strong> in practice.</li>
+            <li>A <strong>foundation for the next phase</strong> where monetization and funnel optimization become the primary focus.</li>
+          </ul>
+          <a class="back-top" href="#overview">Back to top</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const ids = [
+        "overview", "objective", "ecosystem", "funnel", "weekly-output", "allocation",
+        "production", "roles", "time", "workflow", "instagram", "tiktok", "facebook",
+        "performance", "brand", "outcome"
+      ];
+      const sectionEls = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+
+      var desktopToc = document.getElementById("toc-desktop");
+      var mobileToc = document.getElementById("toc-mobile");
+      if (mobileToc && desktopToc) {
+        mobileToc.innerHTML = desktopToc.innerHTML;
+      }
+
+      var allLinks = document.querySelectorAll('.toc a[href^="#"]');
+      allLinks.forEach(function (a) {
+        if (a.getAttribute("href") === "#overview") a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+      allLinks.forEach(function (a) {
+        a.addEventListener("click", function () {
+          if (this.closest("details")) {
+            this.closest("details").removeAttribute("open");
+          }
+        });
+      });
+
+      var obs = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            var id = en.target.id;
+            if (!id) return;
+            allLinks.forEach(function (a) {
+              if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
+              else a.removeAttribute("aria-current");
+            });
+          });
+        },
+        { root: null, rootMargin: "-15% 0px -60% 0px", threshold: 0 }
+      );
+      sectionEls.forEach(function (el) { obs.observe(el); });
+
+      var idx = 0;
+      document.addEventListener("keydown", function (e) {
+        if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.isContentEditable)) return;
+        if (e.key === "j" || e.key === "J") {
+          idx = Math.min(idx + 1, sectionEls.length - 1);
+          sectionEls[idx].scrollIntoView({ behavior: "smooth" });
+          e.preventDefault();
+        } else if (e.key === "k" || e.key === "K") {
+          idx = Math.max(idx - 1, 0);
+          sectionEls[idx].scrollIntoView({ behavior: "smooth" });
+          e.preventDefault();
+        }
+      });
+
+      var io = new IntersectionObserver(
+        function (ents) {
+          ents.forEach(function (en) {
+            if (en.isIntersecting) {
+              var i = sectionEls.indexOf(en.target);
+              if (i >= 0) idx = i;
+            }
+          });
+        },
+        { rootMargin: "-20% 0px -20% 0px", threshold: 0.25 }
+      );
+      sectionEls.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+</body>
+</html>
