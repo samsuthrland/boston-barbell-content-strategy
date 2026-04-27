@@ -4,19 +4,9 @@ Internal HTML presentation. Open `index.html` in a browser, or view the **GitHub
 
 ## Live site (GitHub Pages)
 
-After the first successful deploy, the deck is available at:
+**https://samsuthrland.github.io/boston-barbell-content-strategy/**
 
-`https://<your-username>.github.io/<repository-name>/`
-
-Use your actual GitHub username and repository name in the URL.
-
-### Enable Pages
-
-1. On GitHub: **Settings** → **Pages** (left sidebar).
-2. Under **Build and deployment** → **Source**: **Deploy from a branch**.
-3. **Branch**: `main`, folder **/ (root)** → **Save**.
-
-The site may take one to two minutes to become available. Refresh if you see 404 on first open.
+GitHub Pages is enabled on the `main` branch (root). If the page shows 404, wait a minute and refresh; check **Settings → Pages** for the build status.
 
 ## Local preview
 
